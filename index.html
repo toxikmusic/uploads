@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>File Upload</title>
+<style>
+h1 {
+color: rgba(255,0,0,0.9);
+}
+body {
+background-color: black;
+}
+#form {
+background-color: rgba(255,255,255,0.8);
+color: rgba(0,200,0,0.5);
+border: solid 3px lightgrey;
+}
+button {
+background-color: rgba(0,0,0,0.5);
+color: rgba(200,0,0,0.7);
+}
+</style>
+
+</head>
+<body>
+  <h1>Upload a File</h1>
+<div id="form">
+  <form id="uploadForm" enctype="multipart/form-data">
+    <input type="file" id="fileInput" name="file" required>
+    <button type="submit">Upload</button>
+  </form></div>
+<h1><a href="http://localhost:3000/uploads">../uploads</a></h1>
+
+  <script>
+    const form = document.getElementById('uploadForm');
+
+    form.addEventListener('submit', async (e) => {
+      e.preventDefault();
+      const formData = new FormData();
+      const fileInput = document.getElementById('fileInput');
+
+      if (fileInput.files.length === 0) {
+        alert("Please select a file.");
+        return;
+      }
+
+      formData.append('file', fileInput.files[0]);
+
+      try {
+        const response = await fetch('/upload', {
+          method: 'POST',
+          body: formData
+        });
+
+        const result = await response.text();
+        alert(`File uploaded successfully! Access it here: ${result.fileUrl}`);
+      } catch (error) {
+        console.error('Error uploading file:', error);
+      }
+    });
+  </script>
+</body>
+</html>
