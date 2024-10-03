@@ -28,7 +28,7 @@ app.get('/', function(req, res) {
 });
 
 // Handle file uploads
-app.post('/uploads', upload.single('file'), (req, res) => {
+app.post('https://3a06d651436a9ee739480875effc1a2f.r2.cloudflarestorage.com/uploads', upload.single('file'), (req, res) => {
     if (!req.file) {
         return res.status(400).send('No file uploaded.');
     }
@@ -36,7 +36,7 @@ app.post('/uploads', upload.single('file'), (req, res) => {
 });
 
 // Serve uploaded files sorted by upload date (newest first)
-app.get('/uploads', (req, res) => {
+app.get('https://3a06d651436a9ee739480875effc1a2f.r2.cloudflarestorage.com/uploads', (req, res) => {
     fs.readdir(UPLOADS_FOLDER, (err, files) => {
         if (err) {
             return res.status(500).send('Unable to list files.');
@@ -50,7 +50,7 @@ app.get('/uploads', (req, res) => {
             .sort((a, b) => b.time - a.time)
             .map(file => file.name);
 
-        let fileLinks = files.map(file => `<li><a href="/uploads/${file}" target="_blank">${file}</a></li>`).join('');
+        let fileLinks = files.map(file => `<li><a href="https://3a06d651436a9ee739480875effc1a2f.r2.cloudflarestorage.com/uploads/${file}" target="_blank">${file}</a></li>`).join('');
 
         res.send(`
             <h1>Uploaded Files</h1>
