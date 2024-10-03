@@ -5,7 +5,7 @@ const path = require('path');
 const app = express();
 
 // Create uploads folder if it doesn't exist
-const UPLOADS_FOLDER = path.join(__dirname, '../uploads');
+const UPLOADS_FOLDER = path.join(__dirname, '/uploads');
 if (!fs.existsSync(UPLOADS_FOLDER)) {
     fs.mkdirSync(UPLOADS_FOLDER);
 }
@@ -28,7 +28,7 @@ app.get('/', function(req, res) {
 });
 
 // Handle file uploads
-app.post('../upload', upload.single('file'), (req, res) => {
+app.post('/uploads', upload.single('file'), (req, res) => {
     if (!req.file) {
         return res.status(400).send('No file uploaded.');
     }
@@ -36,7 +36,7 @@ app.post('../upload', upload.single('file'), (req, res) => {
 });
 
 // Serve uploaded files sorted by upload date (newest first)
-app.get('../uploads', (req, res) => {
+app.get('/uploads', (req, res) => {
     fs.readdir(UPLOADS_FOLDER, (err, files) => {
         if (err) {
             return res.status(500).send('Unable to list files.');
@@ -50,7 +50,7 @@ app.get('../uploads', (req, res) => {
             .sort((a, b) => b.time - a.time)
             .map(file => file.name);
 
-        let fileLinks = files.map(file => `<li><a href="../uploads/${file}" target="_blank">${file}</a></li>`).join('');
+        let fileLinks = files.map(file => `<li><a href="/uploads/${file}" target="_blank">${file}</a></li>`).join('');
 
         res.send(`
             <h1>Uploaded Files</h1>
@@ -60,9 +60,9 @@ app.get('../uploads', (req, res) => {
 });
 
 // Serve uploaded files directly
-app.use('../uploads', express.static(UPLOADS_FOLDER));
+app.use('/uploads', express.static(UPLOADS_FOLDER));
 
 const PORT = process.env.PORT || 3000;
 app.listen(PORT, () => {
-    console.log(`Server is running on port ${PORT} https://localhost:${PORT}/`);
+    console.log(`Server is running on port ${PORT}`);
 });
