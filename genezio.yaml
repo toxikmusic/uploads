@@ -1,0 +1,28 @@
+backend:
+    functions:
+        - entry: app.js
+          handler: handler
+          name: express
+          path: .
+          type: httpServer
+    language:
+        name: js
+        runtime: nodejs20.x
+    path: ./uploads
+    scripts:
+        deploy:
+            - npm install
+        local:
+            - npm install
+frontend:
+    path: .
+    publish: .
+    scripts:
+        build:
+            - npm run build
+        deploy:
+            - npm install multer express fs path request-ip
+    subdomain: uploads
+name: uploads
+region: us-east-1
+yamlVersion: 2
