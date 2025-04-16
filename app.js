@@ -17,10 +17,13 @@ if (!fs.existsSync(BEATS_FOLDER)) {
     fs.mkdirSync(BEATS_FOLDER);
 }
 
-// Set up storage for multer
 const storage = multer.diskStorage({
     destination: (req, file, cb) => {
-        cb(null, UPLOADS_FOLDER);
+        let targetFolder = UPLOADS_FOLDER; // default
+        if (req.body.folder === 'beats') {
+            targetFolder = BEATS_FOLDER;
+        }
+        cb(null, targetFolder);
     },
     filename: (req, file, cb) => {
         cb(null, Date.now() + '-' + file.originalname);
@@ -45,16 +48,17 @@ app.post('/upload', upload.single('file'), (req, res) => {
 
     const description = req.body.description || 'No description provided';
     const fileName = req.file.filename;
-    const clientIp = req.clientIp; // Get the IP address from the request
+    const clientIp = req.clientIp;
 
-    // Save description and IP address in a JSON file
-    const descriptionFilePath = path.join(UPLOADS_FOLDER, `${fileName}.json`);
+    // Determine which folder to save JSON metadata in
+    const targetFolder = req.body.folder === 'beats' ? BEATS_FOLDER : UPLOADS_FOLDER;
+    const descriptionFilePath = path.join(targetFolder, `${fileName}.json`);
+
     const fileData = { description, ip: clientIp };
     fs.writeFileSync(descriptionFilePath, JSON.stringify(fileData));
 
     res.status(200).send('File uploaded successfully!');
 });
-
 // Function to generate file list HTML
 function generateFileListHTML(folder) {
     const files = fs.readdirSync(folder).filter(file => !file.endsWith('.json'));
