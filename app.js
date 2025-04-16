@@ -110,7 +110,7 @@ html { max-height: 100%; max-width: auto; }
     </style>
 </head>
 <body>
-<a href="http://vault.toxikmusic.com">Back</a>
+<a href="https://vault.toxikmusic.com/uploads">Back</a>
     <h1>Uploaded Files</h1>
 <div style="height:420px;width:500px;overflow:scroll;border:3px solid white;padding:2%">
     <ul>${fileLinks}</ul>
